@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="container mt-4">
+    <h1 class="mb-4">Inspections</h1>
+    {% if inspections %}
+        <div class="list-group">
+            {% for inspection in inspections %}
+                <a href="{{ url_for('mobile_conduct_inspection', inspection_id=inspection.id) }}" class="list-group-item list-group-item-action">
+                    <div class="d-flex w-100 justify-content-between">
+                        <h5 class="mb-1">Inspection #{{ inspection.id }}</h5>
+                        <small>{{ inspection.timestamp.strftime('%Y-%m-%d %H:%M') }}</small>
+                    </div>
+                    <p class="mb-1">Status: {{ inspection.status }}</p>
+                </a>
+            {% endfor %}
+        </div>
+    {% else %}
+        <p>No inspections found.</p>
+    {% endif %}
+    <div class="mt-4">
+        <a href="{{ url_for('mobile_new_inspection') }}" class="btn btn-primary">Start New Inspection</a>
+    </div>
+</div>
+{% endblock %}

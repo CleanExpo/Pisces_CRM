@@ -1,0 +1,30 @@
+<div style="padding: 20px;">
+  <h1>Water Damage Restoration Dashboard</h1>
+  <div style="display: flex; justify-content: space-between;">
+    <div style="width: 30%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+      <h3>Quick Stats</h3>
+      <ul>
+        <li>Total Cases: {{total_cases}}</li>
+        <li>Active Cases: {{active_cases}}</li>
+        <li>Completed Cases: {{completed_cases}}</li>
+      </ul>
+    </div>
+    <div style="width: 65%; padding: 10px; border: 1px solid #ccc; border-radius: 5px;">
+      <h3>Recent Activity</h3>
+      <table style="width: 100%; border-collapse: collapse;">
+        <tr>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Case ID</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Description</th>
+          <th style="border: 1px solid #ddd; padding: 8px; text-align: left;">Status</th>
+        </tr>
+        {% for case in recent_cases %}
+        <tr>
+          <td style="border: 1px solid #ddd; padding: 8px;">{{case.id}}</td>
+          <td style="border: 1px solid #ddd; padding: 8px;">{{case.description}}</td>
+          <td style="border: 1px solid #ddd; padding: 8px;">{{case.status}}</td>
+        </tr>
+        {% endfor %}
+      </table>
+    </div>
+  </div>
+</div>

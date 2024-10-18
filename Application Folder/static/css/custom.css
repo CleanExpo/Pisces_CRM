@@ -1,0 +1,29 @@
+/* Custom styles to complement Bootstrap */
+body {
+    padding-top: 60px;
+}
+
+.inspection-step {
+    margin-bottom: 20px;
+    padding: 15px;
+    border: 1px solid var(--bs-secondary);
+    border-radius: 5px;
+}
+
+.input-group {
+    margin-bottom: 15px;
+}
+
+#result {
+    margin-top: 20px;
+    padding: 10px;
+    background-color: var(--bs-light);
+    border-radius: 5px;
+}
+
+.report-item {
+    margin-bottom: 15px;
+    padding: 10px;
+    background-color: var(--bs-light);
+    border-radius: 5px;
+}

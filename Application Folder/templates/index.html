@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Water Damage Inspection System</h1>
+<p class="lead">This system guides technicians through water damage inspections, collects multi-modal data, and provides AI-powered interpretations.</p>
+<div class="row">
+    <div class="col-md-6">
+        <h2>Active Inspections</h2>
+        <ul class="list-group" id="inspectionList">
+            <!-- Inspection list will be populated dynamically -->
+        </ul>
+    </div>
+    <div class="col-md-6">
+        <h2>Start New Inspection</h2>
+        <form id="newInspectionForm">
+            <div class="mb-3">
+                <label for="location" class="form-label">Location</label>
+                <input type="text" class="form-control" id="location" required>
+            </div>
+            <div class="mb-3">
+                <label for="description" class="form-label">Description</label>
+                <textarea class="form-control" id="description" rows="3" required></textarea>
+            </div>
+            <button type="submit" class="btn btn-primary">Create Inspection</button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block scripts %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+<script>
+    const socket = io();
+
+    // Fetch and display active inspections
+    function fetchInspections() {
+        fetch('/api/inspections')
+            .then(response => response.json())
+            .then(inspections => {
+                const inspectionList = document.getElementById('inspectionList');
+                inspectionList.innerHTML = '';
+                inspections.forEach(inspection => {
+                    const li = document.createElement('li');
+                    li.className = 'list-group-item';
+                    li.innerHTML = `
+                        <a href="/inspection/${inspection.id}">
+                            Inspection #${inspection.id} - ${inspection.location}
+                        </a>
+                    `;
+                    inspectionList.appendChild(li);
+                });
+            });
+    }
+
+    // Handle new inspection form submission
+    document.getElementById('newInspectionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const location = document.getElementById('location').value;
+        const description = document.getElementById('description').value;
+        fetch('/api/inspections', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({ location, description }),
+        })
+        .then(response => response.json())
+        .then(data => {
+            window.location.href = `/inspection/${data.id}`;
+        });
+    });
+
+    // Fetch inspections on page load
+    fetchInspections();
+
+    // Listen for new inspection events
+    socket.on('new_inspection', function(data) {
+        fetchInspections();
+    });
+</script>
+{% endblock %}

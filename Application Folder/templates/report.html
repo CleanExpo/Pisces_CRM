@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Inspection Report #{{ inspection.id }}</h1>
+<p>Date: {{ inspection.timestamp.strftime('%Y-%m-%d %H:%M:%S') }}</p>
+<p>Status: {{ inspection.status }}</p>
+
+<h2>Comprehensive AI-Generated Report</h2>
+<div class="card mb-4">
+    <div class="card-body">
+        {{ comprehensive_report|safe }}
+    </div>
+</div>
+
+<h2>Detailed Inspection Data</h2>
+{% for item in data %}
+<div class="report-item">
+    <h3>Step {{ item.step_id }}</h3>
+    <p><strong>Data Type:</strong> {{ item.data_type }}</p>
+    {% if item.data_type == 'text' or item.data_type == 'audio' %}
+    <p><strong>Content:</strong> {{ item.data_content }}</p>
+    {% elif item.data_type == 'image' %}
+    <img src="data:image/jpeg;base64,{{ item.data_content }}" alt="Inspection Image" class="img-fluid">
+    {% endif %}
+    <p><strong>AI Interpretation:</strong> {{ item.ai_interpretation }}</p>
+</div>
+{% endfor %}
+
+<h2>Site-Specific Risk Assessment (SSRA)</h2>
+{% if ssra_data %}
+<ul class="list-group">
+    {% for entry in ssra_data %}
+    <li class="list-group-item">
+        <strong>Hazard:</strong> {{ entry.hazard }}<br>
+        <strong>Risk Level:</strong> {{ entry.risk_level }}<br>
+        <strong>Control Measure:</strong> {{ entry.control_measure }}
+    </li>
+    {% endfor %}
+</ul>
+{% else %}
+<p>No SSRA data available.</p>
+{% endif %}
+
+<h2>Interactive Grid Map</h2>
+{% if grid_map %}
+<canvas id="gridMap" width="600" height="400" style="border:1px solid #000;"></canvas>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/fabric.js/5.2.1/fabric.min.js"></script>
+<script>
+    var canvas = new fabric.Canvas('gridMap');
+    var gridSize = 20;
+    var canvasWidth = 600;
+    var canvasHeight = 400;
+
+    // Create grid
+    for (var i = 0; i < canvasWidth / gridSize; i++) {
+        canvas.add(new fabric.Line([i * gridSize, 0, i * gridSize, canvasHeight], { stroke: '#ccc', selectable: false }));
+    }
+    for (var i = 0; i < canvasHeight / gridSize; i++) {
+        canvas.add(new fabric.Line([0, i * gridSize, canvasWidth, i * gridSize], { stroke: '#ccc', selectable: false }));
+    }
+
+    // Load grid data
+    var gridData = {{ grid_map|tojson }};
+    gridData.forEach(function(cell) {
+        var rect = new fabric.Rect({
+            left: cell.x * gridSize,
+            top: cell.y * gridSize,
+            width: gridSize,
+            height: gridSize,
+            fill: 'rgba(255, 0, 0, 0.5)',
+            selectable: false
+        });
+        canvas.add(rect);
+    });
+    canvas.renderAll();
+</script>
+{% else %}
+<p>No grid map data available.</p>
+{% endif %}
+
+<a href="{{ url_for('index') }}" class="btn btn-primary mt-4">Back to Home</a>
+{% endblock %}

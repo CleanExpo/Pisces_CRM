@@ -1,0 +1,15 @@
+Flask==2.3.2
+Flask-SQLAlchemy==3.0.3
+spacy==3.5.0
+https://github.com/explosion/spacy-models/releases/download/en_core_web_sm-3.5.0/en_core_web_sm-3.5.0-py3-none-any.whl
+google-cloud-speech==2.21.0
+google-cloud-vision==3.4.4
+opencv-python-headless==4.7.0.72
+numpy==1.24.3
+flask-socketio
+openai
+opencv-python
+pandas
+streamlit
+xds-protos
+eventlet
